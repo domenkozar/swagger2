@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds                  #-}
 {-# LANGUAGE DeriveFunctor              #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE FunctionalDependencies     #-}
@@ -329,6 +330,42 @@ validateEnum value = do
   check enum_ $ \xs ->
     when (value `notElem` xs) $
       invalid ("expected one of " ++ show (encode xs) ++ " but got " ++ show value)
+
+-- | Infer schema type based on used properties.
+--
+-- >>> inferSchemaTypes <$> decode "{\"minLength\": 2}"
+-- Just [SwaggerString]
+inferSchemaTypes :: Schema -> [SwaggerType 'SwaggerKindSchema]
+inferSchemaTypes sch = inferParamSchemaTypes (sch ^. paramSchema) ++
+  [ SwaggerObject | any ($ sch)
+       [ has (additionalProperties._Just)
+       , has (maxProperties._Just)
+       , has (minProperties._Just)
+       , has (properties.folded)
+       , has (required.folded) ] ]
+
+-- | Infer schema type based on used properties.
+--
+-- >>> inferSchemaTypes <$> decode "{\"minLength\": 2}"
+-- Just [SwaggerString]
+inferParamSchemaTypes :: ParamSchema t -> [SwaggerType t]
+inferParamSchemaTypes sch = concat
+  [ [ SwaggerArray | any ($ sch)
+        [ has (items._Just)
+        , has (maxItems._Just)
+        , has (minItems._Just)
+        , has (uniqueItems._Just) ] ]
+  , [ SwaggerInteger | any ($ sch)
+        [ has (exclusiveMaximum._Just)
+        , has (exclusiveMinimum._Just)
+        , has (maximum_._Just)
+        , has (minimum_._Just)
+        , has (multipleOf._Just) ] ]
+  , [ SwaggerString | any ($ sch)
+        [ has (maxLength._Just)
+        , has (minLength._Just)
+        , has (pattern._Just) ] ]
+  ]
 
 validateSchemaType :: Value -> Validation Schema ()
 validateSchemaType value = withSchema $ \sch ->
