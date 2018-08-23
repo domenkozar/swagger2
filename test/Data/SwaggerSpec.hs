@@ -1,23 +1,23 @@
-{-# LANGUAGE OverloadedLists #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedLists     #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE QuasiQuotes         #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE QuasiQuotes #-}
 module Data.SwaggerSpec where
 
-import Prelude ()
-import Prelude.Compat
+import           Prelude             ()
+import           Prelude.Compat
 
-import Control.Lens
+import           Control.Lens
 
-import Data.Aeson
-import Data.Aeson.QQ
-import Data.HashMap.Strict (HashMap)
-import qualified Data.Set as Set
-import Data.Text (Text)
+import           Data.Aeson
+import           Data.Aeson.QQ
+import           Data.HashMap.Strict (HashMap)
+import qualified Data.Set            as Set
+import           Data.Text           (Text)
 
-import Data.Swagger
-import SpecCommon
-import Test.Hspec hiding (example)
+import           Data.Swagger
+import           SpecCommon
+import           Test.Hspec          hiding (example)
 
 spec :: Spec
 spec = do

@@ -22,5 +22,5 @@ module Data.Swagger.ParamSchema (
   defaultSchemaOptions,
 ) where
 
-import Data.Swagger.Internal.ParamSchema
-import Data.Swagger.SchemaOptions
+import           Data.Swagger.Internal.ParamSchema
+import           Data.Swagger.SchemaOptions

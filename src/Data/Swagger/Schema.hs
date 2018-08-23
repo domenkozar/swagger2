@@ -57,5 +57,5 @@ module Data.Swagger.Schema (
   fromAesonOptions,
 ) where
 
-import Data.Swagger.Internal.Schema
-import Data.Swagger.SchemaOptions
+import           Data.Swagger.Internal.Schema
+import           Data.Swagger.SchemaOptions

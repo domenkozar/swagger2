@@ -1,14 +1,14 @@
-{-# LANGUAGE CPP #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE CPP                    #-}
+{-# LANGUAGE DataKinds              #-}
+{-# LANGUAGE FlexibleContexts       #-}
+{-# LANGUAGE FlexibleInstances      #-}
 {-# LANGUAGE FunctionalDependencies #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE GADTs                  #-}
+{-# LANGUAGE MultiParamTypeClasses  #-}
+{-# LANGUAGE RankNTypes             #-}
+{-# LANGUAGE TemplateHaskell        #-}
+{-# LANGUAGE TypeFamilies           #-}
+{-# LANGUAGE UndecidableInstances   #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 #include "overlapping-compat.h"
 -- |
@@ -19,12 +19,12 @@
 -- Lenses and prisms for Swagger.
 module Data.Swagger.Lens where
 
-import Control.Lens
-import Data.Aeson (Value)
-import Data.Scientific (Scientific)
-import Data.Swagger.Internal
-import Data.Swagger.Internal.Utils
-import Data.Text (Text)
+import           Control.Lens
+import           Data.Aeson                  (Value)
+import           Data.Scientific             (Scientific)
+import           Data.Swagger.Internal
+import           Data.Swagger.Internal.Utils
+import           Data.Text                   (Text)
 
 -- * Classy lenses
 

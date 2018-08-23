@@ -1,12 +1,12 @@
 module SpecCommon where
 
-import Data.Aeson
-import Data.ByteString.Builder (toLazyByteString)
-import qualified Data.Foldable as F
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.Vector as Vector
+import           Data.Aeson
+import           Data.ByteString.Builder (toLazyByteString)
+import qualified Data.Foldable           as F
+import qualified Data.HashMap.Strict     as HashMap
+import qualified Data.Vector             as Vector
 
-import Test.Hspec
+import           Test.Hspec
 
 isSubJSON :: Value -> Value -> Bool
 isSubJSON Null _ = True

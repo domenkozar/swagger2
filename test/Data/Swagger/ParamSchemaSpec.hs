@@ -1,22 +1,22 @@
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE DeriveGeneric       #-}
+{-# LANGUAGE QuasiQuotes         #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskell     #-}
 module Data.Swagger.ParamSchemaSpec where
 
-import Data.Aeson (Value)
-import Data.Aeson.QQ
-import Data.Char
-import Data.Proxy
-import GHC.Generics
+import           Data.Aeson                   (Value)
+import           Data.Aeson.QQ
+import           Data.Char
+import           Data.Proxy
+import           GHC.Generics
 
-import Data.Swagger
-import Data.Swagger.Internal (SwaggerKind(..))
+import           Data.Swagger
+import           Data.Swagger.Internal        (SwaggerKind (..))
 
-import Data.Swagger.CommonTestTypes
-import SpecCommon
-import Test.Hspec
+import           Data.Swagger.CommonTestTypes
+import           SpecCommon
+import           Test.Hspec
 
 checkToParamSchema :: ToParamSchema a => Proxy a -> Value -> Spec
 checkToParamSchema proxy js = (toParamSchema proxy :: ParamSchema ('SwaggerKindNormal Param)) <=> js

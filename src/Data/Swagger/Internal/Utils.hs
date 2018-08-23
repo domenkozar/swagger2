@@ -1,30 +1,30 @@
 {-# LANGUAGE DefaultSignatures #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE RankNTypes        #-}
+{-# LANGUAGE TypeOperators     #-}
 module Data.Swagger.Internal.Utils where
 
-import Prelude ()
-import Prelude.Compat
+import           Prelude                    ()
+import           Prelude.Compat
 
-import Control.Lens ((&), (%~))
-import Control.Lens.TH
-import Data.Aeson
-import Data.Aeson.Types
-import Data.Char
-import Data.Data
-import Data.Hashable (Hashable)
-import Data.HashMap.Strict (HashMap)
-import qualified Data.HashMap.Strict as HashMap
-import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
+import           Control.Lens               ((%~), (&))
+import           Control.Lens.TH
+import           Data.Aeson
+import           Data.Aeson.Types
+import           Data.Char
+import           Data.Data
+import           Data.Hashable              (Hashable)
+import           Data.HashMap.Strict        (HashMap)
+import qualified Data.HashMap.Strict        as HashMap
+import           Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import qualified Data.HashMap.Strict.InsOrd as InsOrdHashMap
-import Data.Map (Map)
-import Data.Set (Set)
-import Data.Text (Text)
-import GHC.Generics
-import Language.Haskell.TH (mkName)
+import           Data.Map                   (Map)
+import           Data.Set                   (Set)
+import           Data.Text                  (Text)
+import           GHC.Generics
+import           Language.Haskell.TH        (mkName)
 
 swaggerFieldRules :: LensRules
 swaggerFieldRules = defaultFieldRules & lensField %~ swaggerFieldNamer
@@ -33,18 +33,18 @@ swaggerFieldRules = defaultFieldRules & lensField %~ swaggerFieldNamer
       map fixDefName (namer dname fnames fname)
 
     fixDefName (MethodName cname mname) = MethodName cname (fixName mname)
-    fixDefName (TopName name) = TopName (fixName name)
+    fixDefName (TopName name)           = TopName (fixName name)
 
     fixName = mkName . fixName' . show
 
-    fixName' "in"       = "in_"       -- keyword
-    fixName' "type"     = "type_"     -- keyword
-    fixName' "default"  = "default_"  -- keyword
-    fixName' "minimum"  = "minimum_"  -- Prelude conflict
-    fixName' "maximum"  = "maximum_"  -- Prelude conflict
-    fixName' "enum"     = "enum_"     -- Control.Lens conflict
-    fixName' "head"     = "head_"     -- Prelude conflict
-    fixName' n = n
+    fixName' "in"      = "in_"       -- keyword
+    fixName' "type"    = "type_"     -- keyword
+    fixName' "default" = "default_"  -- keyword
+    fixName' "minimum" = "minimum_"  -- Prelude conflict
+    fixName' "maximum" = "maximum_"  -- Prelude conflict
+    fixName' "enum"    = "enum_"     -- Control.Lens conflict
+    fixName' "head"    = "head_"     -- Prelude conflict
+    fixName' n         = n
 
 gunfoldEnum :: String -> [a] -> (forall b r. Data b => c (b -> r) -> c r) -> (forall r. r -> c r) -> Constr -> c a
 gunfoldEnum tname xs _k z c = case lookup (constrIndex c) (zip [1..] xs) of
@@ -125,9 +125,9 @@ instance (Eq k, Hashable k) => SwaggerMonoid (InsOrdHashMap k v) where
 instance SwaggerMonoid Text where
   swaggerMempty = mempty
   swaggerMappend x "" = x
-  swaggerMappend _ y = y
+  swaggerMappend _ y  = y
 
 instance SwaggerMonoid (Maybe a) where
   swaggerMempty = Nothing
   swaggerMappend x Nothing = x
-  swaggerMappend _ y = y
+  swaggerMappend _ y       = y

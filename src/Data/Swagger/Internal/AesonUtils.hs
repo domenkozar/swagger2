@@ -1,10 +1,10 @@
-{-# LANGUAGE CPP #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE ExplicitForAll #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE CPP                     #-}
+{-# LANGUAGE DataKinds               #-}
+{-# LANGUAGE ExplicitForAll          #-}
+{-# LANGUAGE FlexibleContexts        #-}
+{-# LANGUAGE GADTs                   #-}
+{-# LANGUAGE ScopedTypeVariables     #-}
+{-# LANGUAGE TemplateHaskell         #-}
 #if __GLASGOW_HASKELL__ >= 800
 {-# LANGUAGE UndecidableSuperClasses #-}
 #endif
@@ -26,27 +26,29 @@ module Data.Swagger.Internal.AesonUtils (
     saoSubObject,
     ) where
 
-import Prelude ()
-import Prelude.Compat
+import           Prelude                    ()
+import           Prelude.Compat
 
-import Control.Applicative ((<|>))
-import Control.Lens     (makeLenses, (^.))
-import Control.Monad    (unless)
-import Data.Aeson       (ToJSON(..), FromJSON(..), Value(..), Object, object, (.:), (.:?), (.!=), withObject)
-import Data.Aeson.Types (Parser, Pair)
-import Data.Char        (toLower, isUpper)
-import Data.Foldable    (traverse_)
-import Data.Text        (Text)
+import           Control.Applicative        ((<|>))
+import           Control.Lens               (makeLenses, (^.))
+import           Control.Monad              (unless)
+import           Data.Aeson                 (FromJSON (..), Object, ToJSON (..),
+                                             Value (..), object, withObject,
+                                             (.!=), (.:), (.:?))
+import           Data.Aeson.Types           (Pair, Parser)
+import           Data.Char                  (isUpper, toLower)
+import           Data.Foldable              (traverse_)
+import           Data.Text                  (Text)
 
-import Generics.SOP
+import           Generics.SOP
 
-import qualified Data.Text as T
-import qualified Data.HashMap.Strict as HM
-import qualified Data.Set as Set
+import qualified Data.HashMap.Strict        as HM
 import qualified Data.HashMap.Strict.InsOrd as InsOrd
+import qualified Data.Set                   as Set
+import qualified Data.Text                  as T
 
 #if MIN_VERSION_aeson(0,10,0)
-import Data.Aeson (Encoding, pairs, (.=), Series)
+import           Data.Aeson                 (Encoding, Series, pairs, (.=))
 #endif
 
 -------------------------------------------------------------------------------
@@ -241,7 +243,7 @@ sopSwaggerGenericParseJSON'' (SwaggerAesonOptions prefix _ sub) obj = go
             cons <$> (withDef $ parseJSON $ Object obj) <*> rest
         | otherwise = case def of
             Just def' -> cons <$> obj .:? T.pack name' .!= def' <*> rest
-            Nothing  ->  cons <$> obj .: T.pack name' <*> rest
+            Nothing   ->  cons <$> obj .: T.pack name' <*> rest
       where
         cons h t = I h :* t
         name' = fieldNameModifier name

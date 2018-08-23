@@ -1,20 +1,21 @@
-{-# LANGUAGE CPP #-}
-{-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE DefaultSignatures #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE OverloadedLists #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PackageImports #-}
-{-# LANGUAGE PolyKinds #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TupleSections #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE CPP                   #-}
+{-# LANGUAGE ConstraintKinds       #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE DefaultSignatures     #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE KindSignatures        #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedLists       #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE PackageImports        #-}
+{-# LANGUAGE PolyKinds             #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
+{-# LANGUAGE TupleSections         #-}
+{-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE TypeOperators         #-}
+{-# LANGUAGE TypeSynonymInstances  #-}
+{-# LANGUAGE UndecidableInstances  #-}
 #if __GLASGOW_HASKELL__ >= 800
 -- Few generics related redundant constraints
 {-# OPTIONS_GHC -Wno-redundant-constraints #-}
@@ -24,58 +25,63 @@
 #include "overlapping-compat.h"
 module Data.Swagger.Internal.Schema where
 
-import Prelude ()
-import Prelude.Compat
+import           Prelude                             ()
+import           Prelude.Compat
 
-import Control.Lens
-import Data.Data.Lens (template)
+import           Control.Lens
+import           Data.Data.Lens                      (template)
 
-import Control.Monad
-import Control.Monad.Writer
-import Data.Aeson (ToJSON (..), ToJSONKey (..), ToJSONKeyFunction (..), Value (..), Object(..))
-import Data.Char
-import Data.Data (Data)
-import Data.Foldable (traverse_)
-import Data.HashMap.Strict (HashMap)
-import qualified Data.HashMap.Strict as HashMap
+import           Control.Monad
+import           Control.Monad.Writer
+import           Data.Aeson                          (Object (..), ToJSON (..),
+                                                      ToJSONKey (..),
+                                                      ToJSONKeyFunction (..),
+                                                      Value (..))
+import           Data.Char
+import           Data.Data                           (Data)
+import           Data.Fixed                          (Fixed, HasResolution,
+                                                      Pico)
+import           Data.Foldable                       (traverse_)
+import           Data.HashMap.Strict                 (HashMap)
+import qualified Data.HashMap.Strict                 as HashMap
+import qualified Data.HashMap.Strict.InsOrd          as InsOrdHashMap
 import           "unordered-containers" Data.HashSet (HashSet)
 import qualified "unordered-containers" Data.HashSet as HashSet
-import qualified Data.HashMap.Strict.InsOrd as InsOrdHashMap
-import Data.Int
-import Data.IntSet (IntSet)
-import Data.IntMap (IntMap)
-import Data.List.NonEmpty.Compat (NonEmpty)
-import Data.Map (Map)
-import Data.Proxy
-import Data.Scientific (Scientific)
-import Data.Fixed (Fixed, HasResolution, Pico)
-import Data.Set (Set)
-import qualified Data.Text as T
-import qualified Data.Text.Lazy as TL
-import Data.Time
-import qualified Data.Vector as V
-import qualified Data.Vector.Primitive as VP
-import qualified Data.Vector.Storable as VS
-import qualified Data.Vector.Unboxed as VU
-import Data.Version (Version)
-import Numeric.Natural.Compat (Natural)
-import Data.Word
-import GHC.Generics
-import qualified Data.UUID.Types as UUID
+import           Data.Int
+import           Data.IntMap                         (IntMap)
+import           Data.IntSet                         (IntSet)
+import           Data.List.NonEmpty.Compat           (NonEmpty)
+import           Data.Map                            (Map)
+import           Data.Proxy
+import           Data.Scientific                     (Scientific)
+import           Data.Set                            (Set)
+import qualified Data.Text                           as T
+import qualified Data.Text.Lazy                      as TL
+import           Data.Time
+import qualified Data.UUID.Types                     as UUID
+import qualified Data.Vector                         as V
+import qualified Data.Vector.Primitive               as VP
+import qualified Data.Vector.Storable                as VS
+import qualified Data.Vector.Unboxed                 as VU
+import           Data.Version                        (Version)
+import           Data.Word
+import           GHC.Generics
+import           Numeric.Natural.Compat              (Natural)
 
-import Data.Swagger.Declare
-import Data.Swagger.Internal
-import Data.Swagger.Internal.ParamSchema (ToParamSchema(..))
-import Data.Swagger.Lens hiding (name, schema)
-import qualified Data.Swagger.Lens as Swagger
-import Data.Swagger.SchemaOptions
-import Data.Swagger.Internal.TypeShape
+import           Data.Swagger.Declare
+import           Data.Swagger.Internal
+import           Data.Swagger.Internal.ParamSchema   (ToParamSchema (..))
+import           Data.Swagger.Internal.TypeShape
+import           Data.Swagger.Lens                   hiding (name, schema)
+import qualified Data.Swagger.Lens                   as Swagger
+import           Data.Swagger.SchemaOptions
 
 #if __GLASGOW_HASKELL__ < 800
 #else
-import qualified Data.ByteString as BS
-import qualified Data.ByteString.Lazy as BSL
-import GHC.TypeLits (TypeError, ErrorMessage(..))
+import qualified Data.ByteString                     as BS
+import qualified Data.ByteString.Lazy                as BSL
+import           GHC.TypeLits                        (ErrorMessage (..),
+                                                      TypeError)
 #endif
 
 unnamed :: Schema -> NamedSchema
@@ -236,7 +242,7 @@ inlineSchemasWhen p defs = template %~ deref
       | p name =
           case InsOrdHashMap.lookup name defs of
             Just schema -> Inline (inlineSchemasWhen p defs schema)
-            Nothing -> r
+            Nothing     -> r
       | otherwise = r
     deref (Inline schema) = Inline (inlineSchemasWhen p defs schema)
 
@@ -329,9 +335,9 @@ passwordSchema = mempty
 sketchSchema :: ToJSON a => a -> Schema
 sketchSchema = sketch . toJSON
   where
-    sketch Null = go Null
+    sketch Null        = go Null
     sketch js@(Bool _) = go js
-    sketch js = go js & example ?~ js
+    sketch js          = go js & example ?~ js
 
     go Null       = mempty & type_ .~ SwaggerNull
     go (Bool _)   = mempty & type_ .~ SwaggerBoolean
@@ -634,7 +640,7 @@ declareSchemaBoundedEnumKeyMapping :: forall map key value proxy.
   => proxy (map key value) -> Declare (Definitions Schema) Schema
 declareSchemaBoundedEnumKeyMapping _ = case toJSONKey :: ToJSONKeyFunction key of
   ToJSONKeyText keyToText _ -> objectSchema keyToText
-  ToJSONKeyValue _ _ -> declareSchema (Proxy :: Proxy [(key, value)])
+  ToJSONKeyValue _ _        -> declareSchema (Proxy :: Proxy [(key, value)])
   where
     objectSchema keyToText = do
       valueRef <- declareSchemaRef (Proxy :: Proxy value)
@@ -699,7 +705,7 @@ genericNameSchema opts _ = NamedSchema (gdatatypeSchemaName opts (Proxy :: Proxy
 gdatatypeSchemaName :: forall proxy d. Datatype d => SchemaOptions -> proxy d -> Maybe T.Text
 gdatatypeSchemaName opts _ = case orig of
   (c:_) | isAlpha c && isUpper c -> Just (T.pack name)
-  _ -> Nothing
+  _                              -> Nothing
   where
     orig = datatypeName (Proxy3 :: Proxy3 d f a)
     name = datatypeNameModifier opts orig

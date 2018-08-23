@@ -111,13 +111,13 @@ module Data.Swagger (
   URL(..),
 ) where
 
-import Data.Swagger.Lens
-import Data.Swagger.Operation
-import Data.Swagger.ParamSchema
-import Data.Swagger.Schema
-import Data.Swagger.Schema.Validation
+import           Data.Swagger.Lens
+import           Data.Swagger.Operation
+import           Data.Swagger.ParamSchema
+import           Data.Swagger.Schema
+import           Data.Swagger.Schema.Validation
 
-import Data.Swagger.Internal
+import           Data.Swagger.Internal
 
 -- $setup
 -- >>> import Control.Lens
@@ -275,7 +275,7 @@ import Data.Swagger.Internal
 -- >>> encode $ toSchema (Proxy :: Proxy Person)
 -- "{\"required\":[\"name\",\"age\"],\"properties\":{\"name\":{\"type\":\"string\"},\"age\":{\"type\":\"integer\"}},\"type\":\"object\"}"
 --
--- Please note that not all valid Haskell data types will have a proper swagger schema. For example while we can derive a 
+-- Please note that not all valid Haskell data types will have a proper swagger schema. For example while we can derive a
 -- schema for basic enums like
 --
 -- >>> data SampleEnum = ChoiceOne | ChoiceTwo deriving Generic

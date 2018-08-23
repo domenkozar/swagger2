@@ -30,19 +30,19 @@ module Data.Swagger.Operation (
   declareResponse,
 ) where
 
-import Prelude ()
-import Prelude.Compat
+import           Prelude                    ()
+import           Prelude.Compat
 
-import Control.Lens
-import Data.Data.Lens
-import Data.List.Compat
-import Data.Maybe (mapMaybe)
-import qualified Data.Set as Set
+import           Control.Lens
+import           Data.Data.Lens
+import           Data.List.Compat
+import           Data.Maybe                 (mapMaybe)
+import qualified Data.Set                   as Set
 
-import Data.Swagger.Declare
-import Data.Swagger.Internal
-import Data.Swagger.Lens
-import Data.Swagger.Schema
+import           Data.Swagger.Declare
+import           Data.Swagger.Internal
+import           Data.Swagger.Lens
+import           Data.Swagger.Schema
 
 import qualified Data.HashMap.Strict.InsOrd as InsOrdHashMap
 

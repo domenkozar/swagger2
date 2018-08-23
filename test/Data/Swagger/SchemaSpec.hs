@@ -1,30 +1,31 @@
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveGeneric       #-}
+{-# LANGUAGE QuasiQuotes         #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskell     #-}
 module Data.Swagger.SchemaSpec where
 
-import Prelude ()
-import Prelude.Compat
+import           Prelude                      ()
+import           Prelude.Compat
 
-import Control.Lens ((^.))
-import Data.Aeson (Value, ToJSON(..), ToJSONKey(..))
-import Data.Aeson.Types (toJSONKeyText)
-import Data.Aeson.QQ
-import Data.Char
-import qualified Data.HashMap.Strict.InsOrd as InsOrdHashMap
-import Data.Proxy
-import Data.Set (Set)
-import Data.Map (Map)
-import qualified Data.Text as Text
-import GHC.Generics
+import           Control.Lens                 ((^.))
+import           Data.Aeson                   (ToJSON (..), ToJSONKey (..),
+                                               Value)
+import           Data.Aeson.QQ
+import           Data.Aeson.Types             (toJSONKeyText)
+import           Data.Char
+import qualified Data.HashMap.Strict.InsOrd   as InsOrdHashMap
+import           Data.Map                     (Map)
+import           Data.Proxy
+import           Data.Set                     (Set)
+import qualified Data.Text                    as Text
+import           GHC.Generics
 
-import Data.Swagger
-import Data.Swagger.Declare
+import           Data.Swagger
+import           Data.Swagger.Declare
 
-import Data.Swagger.CommonTestTypes
-import SpecCommon
-import Test.Hspec
+import           Data.Swagger.CommonTestTypes
+import           SpecCommon
+import           Test.Hspec
 
 checkToSchema :: ToSchema a => Proxy a -> Value -> Spec
 checkToSchema proxy js = toSchema proxy <=> js

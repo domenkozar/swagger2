@@ -1,17 +1,18 @@
-{-# LANGUAGE CPP #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DefaultSignatures #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PackageImports #-}
-{-# LANGUAGE PolyKinds #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE CPP                   #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE DefaultSignatures     #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE KindSignatures        #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE PackageImports        #-}
+{-# LANGUAGE PolyKinds             #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
+{-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE TypeOperators         #-}
+{-# LANGUAGE TypeSynonymInstances  #-}
+{-# LANGUAGE UndecidableInstances  #-}
 #if __GLASGOW_HASKELL__ >= 800
 -- Generic a is redundant in  ToParamSchema a default imple
 {-# OPTIONS_GHC -Wno-redundant-constraints #-}
@@ -21,38 +22,40 @@
 #include "overlapping-compat.h"
 module Data.Swagger.Internal.ParamSchema where
 
-import Control.Lens
-import Data.Aeson (ToJSON (..))
-import Data.Proxy
-import GHC.Generics
+import           Control.Lens
+import           Data.Aeson                          (ToJSON (..))
+import           Data.Proxy
+import           GHC.Generics
 
-import Data.Int
-import "unordered-containers" Data.HashSet (HashSet)
-import Data.Monoid
-import Data.Set (Set)
-import Data.Scientific
-import Data.Fixed (HasResolution(..), Fixed, Pico)
-import qualified Data.Text as T
-import qualified Data.Text.Lazy as TL
-import Data.Time
-import qualified Data.Vector as V
-import qualified Data.Vector.Primitive as VP
-import qualified Data.Vector.Storable as VS
-import qualified Data.Vector.Unboxed as VU
-import Data.Version (Version)
-import Numeric.Natural.Compat (Natural)
-import Data.Word
-import Data.UUID.Types (UUID)
+import           Data.Fixed                          (Fixed, HasResolution (..),
+                                                      Pico)
+import           "unordered-containers" Data.HashSet (HashSet)
+import           Data.Int
+import           Data.Monoid
+import           Data.Scientific
+import           Data.Set                            (Set)
+import qualified Data.Text                           as T
+import qualified Data.Text.Lazy                      as TL
+import           Data.Time
+import           Data.UUID.Types                     (UUID)
+import qualified Data.Vector                         as V
+import qualified Data.Vector.Primitive               as VP
+import qualified Data.Vector.Storable                as VS
+import qualified Data.Vector.Unboxed                 as VU
+import           Data.Version                        (Version)
+import           Data.Word
+import           Numeric.Natural.Compat              (Natural)
 
-import Data.Swagger.Internal
-import Data.Swagger.Lens
-import Data.Swagger.SchemaOptions
+import           Data.Swagger.Internal
+import           Data.Swagger.Lens
+import           Data.Swagger.SchemaOptions
 
 #if __GLASGOW_HASKELL__ < 800
 #else
-import qualified Data.ByteString as BS
-import qualified Data.ByteString.Lazy as BSL
-import GHC.TypeLits (TypeError, ErrorMessage(..))
+import qualified Data.ByteString                     as BS
+import qualified Data.ByteString.Lazy                as BSL
+import           GHC.TypeLits                        (ErrorMessage (..),
+                                                      TypeError)
 #endif
 
 -- | Default schema for binary data (any sequence of octets).
@@ -316,8 +319,8 @@ instance Constructor c => GEnumParamSchema (C1 c U1) where
     where
       tag = toJSON (constructorTagModifier opts (conName (Proxy3 :: Proxy3 c f p)))
 
-      addEnumValue x Nothing    = Just [x]
-      addEnumValue x (Just xs)  = Just (x:xs)
+      addEnumValue x Nothing   = Just [x]
+      addEnumValue x (Just xs) = Just (x:xs)
 
 data Proxy3 a b c = Proxy3
 

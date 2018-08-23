@@ -27,7 +27,7 @@ module Data.Swagger.Schema.Validation (
   validateJSONWithPatternChecker,
 ) where
 
-import Data.Swagger.Internal.Schema.Validation
+import           Data.Swagger.Internal.Schema.Validation
 
 -- $setup
 -- >>> import Control.Lens
